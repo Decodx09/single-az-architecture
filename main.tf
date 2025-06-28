@@ -262,46 +262,7 @@ resource "aws_security_group" "api" {
   lifecycle {
     create_before_destroy = true
   }
-}
-
-resource "aws_security_group" "jenkins" {
-  name_prefix = "${var.project_name}-${var.environment}-jenkins-"
-  vpc_id      = aws_vpc.main.id
-  description = "Security group for Jenkins server"
-
-  ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb.id]
-    description     = "Jenkins from ALB"
-  }
-
-  ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.jump_server.id]
-    description     = "SSH from Jump Server"
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "All outbound traffic"
-  }
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-jenkins-sg"
-    Environment = var.environment
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+} 
 
 resource "aws_security_group" "jump_server" {
   name_prefix = "${var.project_name}-${var.environment}-jump-"
